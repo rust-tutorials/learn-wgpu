@@ -1,0 +1,8 @@
+[book]
+title = "Learn wgpu"
+authors = ["Rukai", "Tomaka"]
+description = "A guided introduction to using the wgpu crate."
+
+[build]
+build-dir = "../target/book-output"
+create-missing = true

@@ -9,4 +9,4 @@ description = "A guided introduction to using the wgpu crate"
 license = "MIT"
 
 [dependencies]
-wgpu = "0.3"
+wgpu = { version = "0.3", git = "https://github.com/gfx-rs/wgpu-rs", rev = "1b401871ca0738c175369ebf333efe0be2dfc1a9" }

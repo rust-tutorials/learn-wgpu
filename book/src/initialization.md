@@ -3,8 +3,8 @@
 ## Request adapter
 
 The first step is to create an `Adapter`.
-The adapter corresponds to a specific physical GPU in the machine your code is running on.
-We specify a `PowerPreference` allowing us to give preference to the type of GPU we are given access to. e.g. `PowerPreference::LowPower` would likely give us an integrated GPU. While `PowerPrefernce::HighPerformance` would likely give us a discrete GPU.
+The adapter corresponds to a specific physical GPU in your computer.
+We specify a `PowerPreference` allowing us to give preference to the type of GPU we are given access to. e.g. `PowerPreference::LowPower` would likely give us an integrated GPU. While `PowerPreference::HighPerformance` would likely give us a discrete GPU.
 
 ```rust
 let adapter = wgpu::Adapter::request(&wgpu::RequestAdapterOptions {

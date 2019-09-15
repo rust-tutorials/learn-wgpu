@@ -48,7 +48,7 @@ In this guide we'll only be using the wgpu crate.
 First, create a new crate:
 `cargo new learn-wgpu`
 
-And then add the wgpu dependency to your `Cargo.toml`: `wgpu = { version = "0.3", git = "https://github.com/gfx-rs/wgpu-rs", rev = "1b401871ca0738c175369ebf333efe0be2dfc1a9" }`
+And then add the wgpu dependency to your `Cargo.toml`: `wgpu = { version = "0.3", git = "https://github.com/gfx-rs/wgpu-rs", rev = "17077f49b5a5c0ee65c9733e8fb262036cf5d706" }`
 
 I use a recent git commit for this tutorial and recommend you use the same commit to avoid any differences in the API.
 If you start to notice differences in the API, check back here, maybe I updated the commit.

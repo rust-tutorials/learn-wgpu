@@ -20,7 +20,7 @@ The `Device` represents an open channel of communication with the physical devic
 Most of the wgpu API is accessed via various methods on the `Device`, so every part of your graphics code will likely need to access it.
 
 ```rust
-let mut device = adapter.request_device(&wgpu::DeviceDescriptor {
+let (device, _queue) = adapter.request_device(&wgpu::DeviceDescriptor {
     extensions: wgpu::Extensions {
         anisotropic_filtering: false,
     },
@@ -28,3 +28,4 @@ let mut device = adapter.request_device(&wgpu::DeviceDescriptor {
 });
 ```
 
+This also returns a seperate queue object which you will submit commands to.

@@ -4,7 +4,7 @@ fn main() {
         backends: wgpu::BackendBit::PRIMARY,
     }).unwrap();
 
-    let device = adapter.request_device(&wgpu::DeviceDescriptor {
+    let (device, _queue) = adapter.request_device(&wgpu::DeviceDescriptor {
         extensions: wgpu::Extensions {
             anisotropic_filtering: false,
         },

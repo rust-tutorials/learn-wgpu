@@ -40,7 +40,7 @@ Make sure you specify the data type in your array otherwise you will be left wit
 
 ## From_data and from_iter
 
-In the example above we create a buffer that contains the value `12`, which is of type `i32`.
+In the example above we create a buffer that contains the values `4` and `13`, which are of type `u32`.
 But you can put any type you want in a buffer, there is no restriction. You can, for example, write
 this:
 

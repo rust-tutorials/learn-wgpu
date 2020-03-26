@@ -1,0 +1,316 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Buffer Creation - Learn wgpu</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="A guided introduction to using the wgpu crate.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div id="sidebar-scrollbox" class="sidebar-scrollbox">
+                <ol class="chapter"><li class="expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="expanded "><a href="initialization.html"><strong aria-hidden="true">2.</strong> Initialization</a></li><li class="expanded "><a href="buffer-creation.html" class="active"><strong aria-hidden="true">3.</strong> Buffer Creation</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
+
+                    <h1 class="menu-title">Learn wgpu</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#creating-a-buffer" id="creating-a-buffer">Creating a buffer</a></h1>
+<p>When using wgpu, you will very often need the GPU to read or write data in memory. In fact
+there isn't much point in using the GPU otherwise, as there is nothing you can do with the results
+of its work except write them to memory.</p>
+<p>In order for the GPU to be able to access some data (either for reading, writing or both), we
+first need to create a <em><strong>buffer</strong></em> object and put the data in it.</p>
+<pre><pre class="playpen"><code class="language-rust">
+<span class="boring">#![allow(unused_variables)]
+</span><span class="boring">fn main() {
+</span>let numbers = [4u32, 13];
+let staging_buffer = device
+    .create_buffer_mapped(
+        numbers.len(),
+        wgpu::BufferUsage::MAP_READ
+            | wgpu::BufferUsage::COPY_DST
+            | wgpu::BufferUsage::COPY_SRC,
+    )
+    .fill_from_slice(&amp;numbers);
+<span class="boring">}
+</span></code></pre></pre>
+<p>TODO: Give definition, so I can refer to arg names.</p>
+<p>We have to indicate several things when creating the buffer.
+The first parameter is the how many elements will be in the buffer.
+This means the total number of bytes of the buffer will be length * the size of the data type being stored.</p>
+<p>The second parameter indicates <a href="https://docs.rs/wgpu/0.3.0/wgpu/struct.BufferUsage.html">which purpose we are creating the buffer</a>
+for, which can help the implementation perform some optimizations.
+Trying to use a buffer in a way that wasn't indicated in its constructor will result in an error.
+It is always valid to use <code>BufferUsage::all()</code> to allow any type of usage, however this will be much slower than specifying its exact usages.</p>
+<p><code>create_buffer_mapped</code> only returns a <code>CreateBufferMapped</code>, we then have to call fill_from_slice on it to store our data and get back a <code>Buffer</code>.</p>
+<p>Make sure you specify the data type in your array otherwise you will be left with whatever datatype rust gives your array and any offsets you give in later code about the array may be wrong.</p>
+<blockquote>
+<p><strong>Note</strong>: In a real application you shouldn't create buffers with only 4 bytes of data. Although
+buffers aren't expensive, you should try to group as much data as you can in the same buffer.</p>
+</blockquote>
+<h2><a class="header" href="#from_data-and-from_iter" id="from_data-and-from_iter">From_data and from_iter</a></h2>
+<p>In the example above we create a buffer that contains the values <code>4</code> and <code>13</code>, which are of type <code>u32</code>.
+But you can put any type you want in a buffer, there is no restriction. You can, for example, write
+this:</p>
+<pre><pre class="playpen"><code class="language-rust">
+<span class="boring">#![allow(unused_variables)]
+</span><span class="boring">fn main() {
+</span>struct MyStruct {
+    a: u32,
+    b: bool,
+}
+
+let data = MyStruct { a: 5, b: true };
+
+let buffer = CpuAccessibleBuffer::from_data(device.clone(), BufferUsage::all(),
+                                            data).unwrap();
+<span class="boring">}
+</span></code></pre></pre>
+<blockquote>
+<p><strong>Note</strong>: While you can put any type you want in a buffer, using a type that doesn't implement
+the <code>Send</code>, <code>Sync</code> and <code>Copy</code> traits or that isn't <code>'static</code> will restrict what you can do with
+that buffer.</p>
+</blockquote>
+<p>While it is sometimes useful to use a buffer that contains a single struct, in practice it is very
+common to put an array of values inside of a buffer. You can, for example, put an array of fifty
+<code>i32</code>s in a buffer with the <code>CpuAccessibleBuffer::from_data</code> function.</p>
+<p>However in practice it is also very common to not know the size of the array at compile-time. In
+order to handle this, <code>CpuAccessibleBuffer</code> provides a <code>from_iter</code> constructor that takes an
+iterator to the data as last parameter, instead of the data itself.</p>
+<p>In the example below, we create a buffer that contains the value <code>5</code> of type <code>u8</code>, 128 times. The
+type of the content of the buffer is <code>[u8]</code>, which, in Rust, represents an array of <code>u8</code>s whose size
+is only known at runtime.</p>
+<pre><pre class="playpen"><code class="language-rust">
+<span class="boring">#![allow(unused_variables)]
+</span><span class="boring">fn main() {
+</span>let iter = (0 .. 128).map(|_| 5u8);
+let buffer = CpuAccessibleBuffer::from_iter(device.clone(), BufferUsage::all(),
+                                            iter).unwrap();
+<span class="boring">}
+</span></code></pre></pre>
+<p>You now know how to create a <code>CpuAccessibleBuffer</code>.
+Keep in mind that <code>from_data</code> and <code>from_iter</code> are specific to the <code>CpuAccessibleBuffer</code>. Each type
+of buffer has its own constructors, sometimes similar but sometimes different.</p>
+<h2><a class="header" href="#reading-and-writing-the-contents-of-a-buffer" id="reading-and-writing-the-contents-of-a-buffer">Reading and writing the contents of a buffer</a></h2>
+<p>Once a <code>CpuAccessibleBuffer</code> is created, you can access its content with the <code>read()</code> or <code>write()</code>
+methods. Using <code>read()</code> will grant you shared access to the content of the buffer, and using
+<code>write()</code> will grant you exclusive access. This is similar to using a <code>RwLock</code>.</p>
+<p>For example if <code>buffer</code> contains a <code>MyStruct</code> (see above):</p>
+<pre><pre class="playpen"><code class="language-rust">
+<span class="boring">#![allow(unused_variables)]
+</span><span class="boring">fn main() {
+</span>let mut content = buffer.write().unwrap();
+// `content` implements `DerefMut` whose target is of type `MyStruct` (the content of the buffer)
+content.a *= 2;
+content.b = false;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Alternatively, suppose that the content of <code>buffer</code> is of type <code>[u8]</code> (like with the example that
+uses <code>from_iter</code>):</p>
+<pre><pre class="playpen"><code class="language-rust">
+<span class="boring">#![allow(unused_variables)]
+</span><span class="boring">fn main() {
+</span>let mut content = buffer.write().unwrap();
+// this time `content` derefs to `[u8]`
+content[12] = 83;
+content[7] = 3;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Just like the constructors, keep in mind that being able to read/write the content of the buffer
+like this is specific to the <code>CpuAccessibleBuffer</code>. Other kinds of buffers (for example the
+<code>ImmutableBuffer</code>) do not provide such methods.</p>
+<p>Next: <a href="/guide/example-operation">Example operation</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="initialization.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a rel="prev" href="initialization.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+        
+        
+        <script type="text/javascript">
+            window.playpen_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
